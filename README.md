@@ -39,7 +39,7 @@ The circuits were simulated in LTspice. Open the `.asc` schematic in `simulation
 
 ### Simulation results
 
-- **Error signal:** the LT1920 gain is G = 1 + 49.4 kΩ / RG. With RG = 10 kΩ, G ≈ 5.94. A 0.4 kΩ imbalance in the thermistor gives an error of ~0.38 V at `P_out`, in agreement with the hand calculation. With the bridge balanced (all resistors at 10 kΩ), `P_out` goes to 0. Leaving RG open gives G = 1.
+- **Error signal:** the LT1920 gain is G = 1 + 49.4 kΩ / RG. With RG = 10 kΩ, G ≈ 5.94. A 0.4 kΩ imbalance in the thermistor gives an error of ≈0.38 V at `P_out`, in agreement with the hand calculation. With the bridge balanced (all resistors at 10 kΩ), `P_out` goes to 0. Leaving RG open gives G = 1.
 - **PI stage:** with R9 = 1 kΩ, R11 = 10 kΩ and C2 = 1 µF (values used in the figures below), the proportional gain is R11/R9 = 10 and the integral gain is 1/(R9·C2) = 1000 s⁻¹ (corner frequency 1/(2π·R11·C2) ≈ 16 Hz).
 - **Loop sign:** the NTC thermistor is on the in− side of the bridge. If its resistance rises (colder), `P_out` becomes negative, the inverting PI output goes positive and the TEC heats. If the temperature rises, the opposite happens and the TEC cools. The TEC wiring polarity must be checked on hardware.
 - **Output stage:** with the default LTspice MOSFET models, the output saturated at about ±1.7 V because the generic models cannot deliver enough current. With power MOSFETs (IRF530 and IRF9Z24S_L) the TEC voltage follows the PI output (V_TEC ≈ 0.909 · V_PI, set by the R8/R2 divider).
@@ -51,11 +51,11 @@ All plots share the same time axis (0 to 200 ms): V(p_out) in green, V(pi) in bl
 
 ![Balanced bridge](figures/fig1_balanced_bridge.png)
 
-**Figure 1.** Bridge balanced (all four resistors at 10 kΩ). After the startup transient (~30 ms), the error signal `P_out` goes to 0. The PI output stays near −12.4 V and V(tec) near −11 V: this is the wound-up value left by the startup transient (with zero error the integrator holds its value), not a real operating point. The small ripple is not an oscillation: it comes from the 15 kHz perturbation source added at the thermistor node to simulate a disturbance at the sensor.
+**Figure 1.** Bridge balanced (all four resistors at 10 kΩ). After the startup transient (≈30 ms), the error signal `P_out` goes to 0. The PI output stays near −12.4 V and V(tec) near −11 V: this is the wound-up value left by the startup transient (with zero error the integrator holds its value), not a real operating point. The small ripple is not an oscillation: it comes from the 15 kHz perturbation source added at the thermistor node to simulate a disturbance at the sensor.
 
 ![Thermistor offset](figures/fig2_thermistor_offset.png)
 
-**Figure 2.** Thermistor 0.4 kΩ above 10 kΩ (colder than the setpoint). `P_out` settles at about −0.4 V and, since there is no thermal feedback in the simulation, the integrator ramps the PI output (~400 V/s, as expected from 1000 s⁻¹ × 0.4 V) from negative to its positive limit (~+13.9 V). V(tec) follows it, changes polarity (heating) and saturates at about +9.7 V, below the PI output, because the NMOS source follower cannot go above the gate voltage minus its gate-source voltage.
+**Figure 2.** Thermistor 0.4 kΩ above 10 kΩ (colder than the setpoint). `P_out` settles at about −0.4 V and, since there is no thermal feedback in the simulation, the integrator ramps the PI output (≈400 V/s, as expected from 1000 s⁻¹ × 0.4 V) from negative to its positive limit (≈+13.9 V). V(tec) follows it, changes polarity (heating) and saturates at about +9.7 V, below the PI output, because the NMOS source follower cannot go above the gate voltage minus its gate-source voltage.
 
 ### Known limitations and pending items
 
