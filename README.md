@@ -12,14 +12,14 @@ The wavelength and mode of a laser diode drift with temperature. For the externa
 
 The design is split into four stages (see `schematic.png`):
 
-!\[Schematic](schematic.png)
+![Schematic](schematic.png)
 
-|#|Stage|Description|
-|-|-|-|
-|1|**Regulated ±15 V power supply**|Dual-rail ±15 V supply (+VCC / −VCC) with LED on/off indicators (D1, D2 with 5 kΩ series resistors).|
-|2|**Error signal generator**|Wheatstone bridge with a 10 kΩ NTC thermistor, a 10 kΩ setpoint resistor (SP) and a 6.5 V bridge supply (LM399 reference). The bridge output is amplified by an LT1920 instrumentation amplifier, producing the error signal `P\_out`. A sinusoidal current source (`perturbation`, 100 µA at 15 kHz, in parallel with C5 = 1 µF) is injected at the thermistor node to test the loop response.|
-|3|**PID system**|Proportional-integral network built around an OP27 op-amp (R9, R11, C2), with an additional R10/C1 network for the derivative part.|
-|4|**Cooling and heating stage**|AD711 op-amp driving a complementary push-pull source-follower output stage (IRF530 NMOS / IRF9Z24S\_L PMOS) that delivers bidirectional current to the TEC, enabling both cooling and heating. The output is fed back to the AD711. The TEC is modeled as a resistor in simulation.|
+| # | Stage | Description |
+|---|-------|-------------|
+| 1 | **Regulated ±15 V power supply** | Dual-rail ±15 V supply (+VCC / −VCC) with LED on/off indicators (D1, D2 with 5 kΩ series resistors). |
+| 2 | **Error signal generator** | Wheatstone bridge with a 10 kΩ NTC thermistor, a 10 kΩ setpoint resistor (SP) and a 6.5 V bridge supply (LM399 reference). The bridge output is amplified by an LT1920 instrumentation amplifier, producing the error signal `P_out`. A sinusoidal current source (`perturbation`, 100 µA at 15 kHz, in parallel with C5 = 1 µF) is injected at the thermistor node to test the loop response. |
+| 3 | **PID system** | Proportional-integral network built around an OP27 op-amp (R9, R11, C2), with an additional R10/C1 network for the derivative part. |
+| 4 | **Cooling and heating stage** | AD711 op-amp driving a complementary push-pull source-follower output stage (IRF530 NMOS and a PMOS: IRF9Z24S_L in simulation, IRF5305 in hardware) that delivers bidirectional current to the TEC, enabling both cooling and heating. The output is fed back to the AD711. The TEC is modeled as a resistor in simulation. |
 
 ## Repository structure
 
@@ -43,26 +43,37 @@ The circuits were simulated in LTspice. Open the files in `simulations/` and run
 
 ### Simulation results
 
-* **Error signal:** the LT1920 gain is G = 1 + 49.4 kΩ / RG. With RG = 10 kΩ, G ≈ 5.94. A 0.4 kΩ imbalance in the thermistor gives an error of \~0.38 V at `P\_out`, in agreement with the hand calculation. With the bridge balanced (all resistors at 10 kΩ), `P\_out` goes to 0. Leaving RG open gives G = 1.
-* **PI stage:** proportional gain R11/R9 = 10, integral gain 1/(R9·C2) = 1000 s⁻¹ (corner frequency ≈ 16 Hz).
-* **Loop sign:** the NTC is on the in− side of the bridge. If the thermistor resistance rises (colder), `P\_out` becomes negative, the inverting PI output goes positive and the TEC heats. If the temperature rises, the opposite happens and the TEC cools. The TEC wiring polarity must be checked on hardware.
-* **Output stage:** with the default LTspice MOSFET models, the output saturated at about ±1.7 V because the generic models cannot deliver enough current. With power MOSFETs (IRF530 and IRF9Z24S\_L) the TEC voltage follows the PI output (V\_TEC ≈ 0.909 · V\_PI, set by the R8/R2 divider).
-* **Perturbation:** the ripple observed in V(pi) and V(tec) was measured at 14.97 kHz, matching the injected 15 kHz source, so it is not an oscillation of the output stage.
+- **Error signal:** the LT1920 gain is G = 1 + 49.4 kΩ / RG. With RG = 10 kΩ, G ≈ 5.94. A 0.4 kΩ imbalance in the thermistor gives an error of ~0.38 V at `P_out`, in agreement with the hand calculation. With the bridge balanced (all resistors at 10 kΩ), `P_out` goes to 0. Leaving RG open gives G = 1.
+- **PI stage:** proportional gain R11/R9 = 10, integral gain 1/(R9·C2) = 1000 s⁻¹ (corner frequency ≈ 16 Hz).
+- **Loop sign:** the NTC is on the in− side of the bridge. If the thermistor resistance rises (colder), `P_out` becomes negative, the inverting PI output goes positive and the TEC heats. If the temperature rises, the opposite happens and the TEC cools. The TEC wiring polarity must be checked on hardware.
+- **Output stage:** with the default LTspice MOSFET models, the output saturated at about ±1.7 V because the generic models cannot deliver enough current. With power MOSFETs (IRF530 and IRF9Z24S_L) the TEC voltage follows the PI output (V_TEC ≈ 0.909 · V_PI, set by the R8/R2 divider).
+- **Perturbation:** the ripple observed in V(pi) and V(tec) was measured at 14.97 kHz, matching the injected 15 kHz source, so it is not an oscillation of the output stage.
 
 ### Known limitations and pending items
 
-* In simulation the TEC and the thermistor are fixed resistors, so the thermal loop is not closed. With a constant error the integrator ramps to the rail, and the PI output can remain wound up after the startup transient. A thermal plant model is needed to validate the PID tuning in simulation, and an anti-windup or soft start may be needed on hardware.
-* The TEC load (a high-value resistor in the simulations) is not realistic. A real TEC is a few ohms and draws amperes, so the current and power dissipation of the MOSFETs must be checked with a realistic load, and heatsinks may be required.
-* The MOSFET pair used in the PCB design must be confirmed, and its SPICE models used in the simulation.
+- In simulation the TEC and the thermistor are fixed resistors, so the thermal loop is not closed. With a constant error the integrator ramps to the rail, and the PI output can remain wound up after the startup transient. A thermal plant model is needed to validate the PID tuning in simulation, and an anti-windup or soft start may be needed on hardware.
+- The TEC load (a high-value resistor in the simulations) is not realistic. A real TEC is a few ohms and draws amperes, so the current and power dissipation of the MOSFETs must be checked with a realistic load, and heatsinks may be required.
+- The simulation uses the IRF9Z24S_L as PMOS, while the hardware uses the IRF5305. The IRF5305 SPICE model should be added to repeat the simulation with the real pair. The AD711 datasheet is also missing from `DATASHEET/`.
 
 ## Main components
 
-* LT1920: instrumentation amplifier (error signal)
-* LM399: voltage reference (bridge supply)
-* NTC 10 kΩ: temperature sensor
-* OP27: PID stage
-* AD711: output driver
-* IRF530 (NMOS) / IRF9Z24S\_L (PMOS): bidirectional TEC drive (simulation models)
+Datasheets are in the `DATASHEET/` folder. The table distinguishes what is used in the LTspice simulation from what is used in the real hardware (breadboard and PCB).
+
+| Function | Simulation (LTspice) | Hardware (breadboard / PCB) | Datasheet |
+|----------|----------------------|-----------------------------|-----------|
+| +15 V supply | Ideal 15 V source (V3) | LM7815 regulator | `LM7815-1120980.pdf` |
+| −15 V supply | Ideal 15 V source (V1) | LM79xx negative regulator | `lm79.pdf` |
+| Bridge voltage reference (6.5 V) | Ideal 6.5 V source (labelled LM399) | LM399 | `LM399 .pdf` |
+| Temperature sensor | 10 kΩ resistor (NTC10K) | 10 kΩ NTC thermistor | `TERMISTOR_NTC_10K.pdf` |
+| Error signal amplifier | LT1920 | LT1920 | `LT1920.pdf` |
+| PID stage | OP27 | OP27 | `op27.pdf` |
+| TEC driver op-amp | AD711 | To be confirmed (no datasheet in `DATASHEET/` yet) | n/a |
+| NMOS output transistor | IRF530 | IRF530 | `irf530.pdf` |
+| PMOS output transistor | IRF9Z24S_L (substitute, available in the LTspice library) | IRF5305 | `IRF5305.pdf` |
+| TEC | Fixed resistor | Real TEC (a few ohms, amperes) | n/a |
+| Power indicators | LEDs with 5 kΩ resistors | LEDs with 5 kΩ resistors | n/a |
+
+The IRF5305 is not in the default LTspice library. To simulate the hardware pair exactly, its SPICE model can be added to the project and assigned to M2.
 
 ## Status
 
@@ -80,7 +91,7 @@ A report will be written documenting the whole process: the simulation, the brea
 
 ## Author
 
-Agustín Ivan Cáceres Reyes, guided course under Dr. Pablo Solano, LAMP.
+Agustín Iván Cáceres Reyes, guided course under Dr. Pablo Solano, LAMP.
 
 PCB design: Rodrigo Andrés Jofré Cerda, Department of Physics, Universidad de Concepción.
 
@@ -91,4 +102,3 @@ This project was carried out under the guidance of **Rodrigo Andrés Jofré Cerd
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
