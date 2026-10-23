@@ -10,9 +10,7 @@ The wavelength and mode of a laser diode drift with temperature. For the externa
 
 ## System overview
 
-The design is split into four stages (see `schematic.png`):
-
-![Schematic](schematic.png)
+The design is split into four stages (see the full schematic in [`schematic.pdf`](schematic.pdf)):
 
 | # | Stage | Description |
 |---|-------|-------------|
@@ -28,7 +26,7 @@ The design is split into four stages (see `schematic.png`):
 ├── DATASHEET/         Datasheets of the components used
 ├── Schematics PCB/    Schematics and PCB design files
 ├── simulations/       LTspice simulations
-├── schematic.png      Overview of the full circuit
+├── schematic.pdf      Overview of the full circuit
 ├── LICENSE
 └── README.md
 ```
