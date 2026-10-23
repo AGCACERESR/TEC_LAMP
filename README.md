@@ -23,16 +23,15 @@ The design is split into four stages (see the full schematic in [`schematic.pdf`
 
 ```
 .
-├── Schematics/        LTspice schematics
-├── simulations/       LTspice simulations
-├── schematic.pdf      Overview of the full circuit
+├── simulations/       LTspice schematic (.asc)
+├── schematic.pdf      PDF of the full circuit schematic
 ├── LICENSE
 └── README.md
 ```
 
 ## Simulation
 
-The circuits were simulated in LTspice. Open the files in `simulations/` and run them directly. For example, the power supply stage uses:
+The circuits were simulated in LTspice. Open the `.asc` schematic in `simulations/` with LTspice and run it directly. For example, the power supply stage uses:
 
 ```
 .tran 0 0.3 0 100u uic
@@ -59,9 +58,9 @@ Datasheets are not included in this repository, to respect the manufacturers' co
 | Function | Simulation (LTspice) | Hardware (breadboard / PCB) | Product page |
 |----------|----------------------|-----------------------------|-----------|
 | +15 V supply | Ideal 15 V source (V3) | LM7815 regulator | n/a |
-| −15 V supply | Ideal 15 V source (V1) | LM79xx negative regulator | n/a |
+| −15 V supply | Ideal 15 V source (V1) | LM7915 negative regulator | n/a |
 | Bridge voltage reference (6.5 V) | Ideal 6.5 V source (labelled LM399) | LM399 | [LM399](https://www.analog.com/en/products/lm399.html) |
-| Temperature sensor | 10 kΩ resistor (modeled as an NTC) | NTCLE100E3 10 kΩ NTC thermistor (Vishay) | [NTCLE100E3](https://www.vishay.com/docs/29049/ntcle100.pdf) |
+| Temperature sensor | 10 kΩ resistor (modeled as an NTC) | NTCLE100E3 10 kΩ NTC thermistor | [NTCLE100E3](https://www.vishay.com/docs/29049/ntcle100.pdf) |
 | Error signal amplifier | LT1920 | LT1920 | [LT1920](https://www.analog.com/en/products/lt1920.html) |
 | PID stage | OP27 | OP27 | [OP27](https://www.analog.com/op27) |
 | TEC driver op-amp | AD711 | To be confirmed | [AD711](https://www.analog.com/en/products/ad711.html) |
