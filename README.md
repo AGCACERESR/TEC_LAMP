@@ -1,4 +1,4 @@
-# Controlador TEC (Peltier) para ECDL
+# Controlador TEC para ECDL
 
 Controlador de temperatura con celda Peltier para un láser de diodo de cavidad extendida (ECDL).
 Proyecto del curso *Prototipos I*, LAMP, Universidad de Concepción. Supervisor: Dr. Pablo Solano.
