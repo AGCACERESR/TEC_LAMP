@@ -8,7 +8,6 @@ NTC 10 kΩ en puente de Wheatstone → INA114 → control PI (OP27) → AD711 + 
 
 * Referencia: LM399 (6,95 V). Alimentación: ±15 V (7815/7915).
 * Set point: 25 °C con el puente en 10 kΩ.
-* PI: Kp = 10, Ki = 1000 s⁻¹.
 
 ## Estado
 
