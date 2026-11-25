@@ -1,7 +1,7 @@
 # Controlador TEC para ECDL
 
 Controlador de temperatura con celda Peltier para un láser de diodo de cavidad externa (ECDL).
-Proyecto del curso *Prototipos I*, LAMP, Universidad de Concepción.
+Proyecto del curso *Diseño de Prototipos I*, Universidad de Concepción.
 ## Diseño
 
 NTC 10 kΩ en puente de Wheatstone → INA114 → control PI (OP27) → AD711 + IRF530/IRF5305 (push-pull) → Peltier.
