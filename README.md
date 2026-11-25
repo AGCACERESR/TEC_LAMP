@@ -15,5 +15,5 @@ NTC 10 kΩ en puente de Wheatstone → INA114 → control PI (OP27) → AD711 + 
 Validado en protoboard: la cadena INA114 → PI → MOSFET → Peltier calienta y enfría con el signo correcto.
 Pendiente: limitación de corriente (resistencia en serie con el Peltier), disipación de los MOSFET y sintonía del PI.
 
-
+##
 
