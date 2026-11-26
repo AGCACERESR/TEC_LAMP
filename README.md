@@ -1,19 +1,10 @@
 # Controlador TEC para ECDL
 
-Controlador de temperatura con celda Peltier para un láser de diodo de cavidad externa (ECDL).
-Proyecto del curso *Diseño de Prototipos I*, Universidad de Concepción.
-## Diseño
+Controlador analógico de temperatura de lazo cerrado con elemento termoeléctrico (TEC / celda Peltier) para estabilizar un láser de diodo de cavidad externa con retroalimentación óptica (ECDL).
 
-NTC 10 kΩ en puente de Wheatstone → INA114 → control PI (OP27) → AD711 + IRF530/IRF5305 (push-pull) → Peltier.
+Proyecto desarrollado en el Laboratorio de Física Atómica y Molecular (LAMP), Departamento de Física, Universidad de Concepción (curso *Diseño de Prototipos I*, bajo la dirección del Dr. Pablo Solano).
 
-* Referencia: LM399 (6,95 V). Alimentación: ±15 V (7815/7915).
-* Set point: 25 °C con el puente en 10 kΩ.
+## Arquitectura del circuito
 
-## Estado
-
-Validado en protoboard: la cadena INA114 → PI → MOSFET → Peltier calienta y enfría con el signo correcto.
-
-Pendiente: limitación de corriente (resistencia en serie con el Peltier), disipación de los MOSFET y sintonía del PI.
-
-##
-
+```text
+LM399 (6,95 V) ─► Puente de Wheatstone (NTC 10 kΩ) ─► INA114 (G ≈ 11,6) ─► Controlador PI (OP27) ─► AD711 + IRF530/IRF5305 ─► R_lim (33 Ω) + Peltier (Marlow RC 3-6)
